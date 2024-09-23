@@ -53,6 +53,26 @@
         button:hover {
             background-color: #218838;
         }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .absensi-list {
+            display: none; /* Sembunyikan daftar absensi sampai ada data */
+        }
     </style>
 </head>
 <body>
@@ -75,10 +95,28 @@
 
             <button type="submit">Submit</button>
         </form>
+
+        <div class="absensi-list" id="absensiList">
+            <h2>Daftar Absensi</h2>
+            <table id="absensiTable">
+                <thead>
+                    <tr>
+                        <th>Nama Lengkap</th>
+                        <th>Tanggal</th>
+                        <th>Status Kehadiran</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Data absensi akan ditambahkan di sini -->
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <script>
         const absensiForm = document.getElementById('absensiForm');
+        const absensiTable = document.getElementById('absensiTable').getElementsByTagName('tbody')[0];
+        const absensiList = document.getElementById('absensiList');
 
         absensiForm.addEventListener('submit', function(event) {
             event.preventDefault(); // Mencegah form dari reload halaman
@@ -86,15 +124,20 @@
             const nama = document.getElementById('nama').value;
             const tanggal = document.getElementById('tanggal').value;
             const status = document.getElementById('status').value;
-            const waktu = new Date().toLocaleTimeString(); // Ambil waktu saat ini
 
-            // Simpan data ke localStorage
-            let absensiList = JSON.parse(localStorage.getItem('absensiList')) || [];
-            absensiList.push({ nama, tanggal, status, waktu });
-            localStorage.setItem('absensiList', JSON.stringify(absensiList));
+            // Menambahkan baris baru ke tabel
+            const newRow = absensiTable.insertRow();
+            newRow.innerHTML = `
+                <td>${nama}</td>
+                <td>${tanggal}</td>
+                <td>${status}</td>
+            `;
 
-            // Arahkan ke halaman daftar absensi
-            window.location.href = 'daftar-absensi.html';
+            // Tampilkan daftar absensi jika ada data
+            absensiList.style.display = 'block';
+
+            // Reset form setelah submit
+            absensiForm.reset();
         });
     </script>
 </body>
